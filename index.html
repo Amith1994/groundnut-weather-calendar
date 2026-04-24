@@ -3,123 +3,99 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Groundnut Weather Calendar</title>
+  <title>Groundnut Advisory Table</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="page-shell">
     <header class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">Dynamic Crop Weather Calendar</p>
-        <h1>Groundnut advisory planner for Chitradurga</h1>
-        <p class="hero-text">
-          Generate a 5-day forecast summary and produce side-by-side OLD vs NEW advisories for
-          agrometeorology, agronomy, pest &amp; disease, and yield-enhancing practices.
-        </p>
-      </div>
-      <div class="hero-card">
-        <p class="hero-card-label">MVP Scope</p>
-        <ul>
-          <li>Static web app for GitHub Pages</li>
-          <li>Rule-based advisory engine</li>
-          <li>Editable previous advisory + 5-day forecast</li>
-        </ul>
-      </div>
+      <p class="eyebrow">Groundnut Advisory Tool</p>
+      <h1>Fill the weather table and generate the advisory</h1>
+      <p class="hero-text">
+        Enter the 5-day weather forecast first. Then generate a clean side-by-side advisory table
+        for Chitradurga groundnut crop planning.
+      </p>
     </header>
 
-    <main class="grid">
-      <section class="panel input-panel">
-        <div class="panel-heading">
-          <h2>Inputs</h2>
-          <button id="loadSampleBtn" class="ghost-button" type="button">Load sample</button>
-        </div>
-
-        <div class="field-row">
-          <label>
-            <span>Crop name</span>
-            <input id="cropInput" type="text" value="Groundnut">
-          </label>
-          <label>
-            <span>District</span>
-            <input id="districtInput" type="text" value="Chitradurga">
-          </label>
-        </div>
-
+    <section class="panel compact-panel">
+      <div class="field-row">
+        <label>
+          <span>Crop name</span>
+          <input id="cropInput" type="text" value="Groundnut">
+        </label>
+        <label>
+          <span>District</span>
+          <input id="districtInput" type="text" value="Chitradurga">
+        </label>
         <label>
           <span>Growth stage</span>
           <input id="stageInput" type="text" value="Flowering to pegging">
         </label>
+      </div>
 
-        <label>
-          <span>Previous advisory (JSON or free text)</span>
-          <textarea id="prevAdvisoryInput" rows="12"></textarea>
-        </label>
+      <label>
+        <span>Previous advisory</span>
+        <textarea id="prevAdvisoryInput" rows="10"></textarea>
+      </label>
+    </section>
 
-        <div class="forecast-header">
-          <h3>Updated 5-day forecast</h3>
-          <p>Adjust values and regenerate advisories.</p>
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <h2>Weather Forecast Table</h2>
+          <p class="subtext">Fill or edit the values below.</p>
         </div>
-        <div id="forecastGrid" class="forecast-grid"></div>
-
         <div class="action-row">
-          <button id="generateBtn" class="primary-button" type="button">Generate Advisory</button>
-          <button id="copyJsonBtn" class="secondary-button" type="button">Copy JSON</button>
+          <button id="loadSampleBtn" class="ghost-button" type="button">Load sample</button>
+          <button id="generateBtn" class="primary-button" type="button">Generate advisory</button>
         </div>
-      </section>
+      </div>
 
-      <section class="panel output-panel">
-        <div class="panel-heading">
-          <h2>Forecast Summary</h2>
-          <span id="generatedAtLabel" class="timestamp"></span>
+      <div class="table-wrap">
+        <table class="forecast-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Max C</th>
+              <th>Min C</th>
+              <th>Rain mm</th>
+              <th>RH AM %</th>
+              <th>RH PM %</th>
+              <th>Wind km/h</th>
+              <th>Direction</th>
+              <th>Cloud %</th>
+            </tr>
+          </thead>
+          <tbody id="forecastTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <h2 id="outputTitle">Advisory Table</h2>
+          <p class="subtext">Only the advisory output is shown below.</p>
         </div>
-        <p id="summaryText" class="summary-text"></p>
+      </div>
 
-        <div id="signalCards" class="signal-cards"></div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Domain</th>
-                <th>OLD ADVISORY</th>
-                <th>NEW ADVISORY (Updated Forecast - Chitradurga)</th>
-              </tr>
-            </thead>
-            <tbody id="advisoryTableBody"></tbody>
-          </table>
-        </div>
-
-        <section class="scenario-section">
-          <div class="panel-heading compact">
-            <h3>Pest &amp; disease scenarios</h3>
-          </div>
-          <div id="scenarioList" class="scenario-list"></div>
-        </section>
-      </section>
-    </main>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Domain</th>
+              <th>OLD ADVISORY</th>
+              <th>NEW ADVISORY (Updated Forecast - Chitradurga)</th>
+            </tr>
+          </thead>
+          <tbody id="advisoryTableBody"></tbody>
+        </table>
+      </div>
+    </section>
   </div>
-
-  <template id="forecastCardTemplate">
-    <article class="forecast-card">
-      <div class="forecast-card-top">
-        <h4 class="forecast-date"></h4>
-        <span class="forecast-day-index"></span>
-      </div>
-      <div class="field-grid">
-        <label><span>Max °C</span><input data-key="tempMaxC" type="number"></label>
-        <label><span>Min °C</span><input data-key="tempMinC" type="number"></label>
-        <label><span>Rain mm</span><input data-key="rainfallMm" type="number"></label>
-        <label><span>RH AM %</span><input data-key="humidityMorningPct" type="number"></label>
-        <label><span>RH PM %</span><input data-key="humidityEveningPct" type="number"></label>
-        <label><span>Wind km/h</span><input data-key="windSpeedKmph" type="number"></label>
-        <label><span>Direction</span><input data-key="windDirection" type="text"></label>
-        <label><span>Cloud %</span><input data-key="cloudCoverPct" type="number"></label>
-      </div>
-    </article>
-  </template>
 
   <script src="app.js"></script>
 </body>
