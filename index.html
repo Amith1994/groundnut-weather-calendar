@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Groundnut Advisory Table</title>
+  <title>Karnataka Crop Advisory</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
@@ -12,73 +12,64 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <p class="eyebrow">Groundnut Advisory Tool</p>
-      <h1>Fill the weather table and generate the advisory</h1>
+      <p class="eyebrow">Karnataka Crop Advisory Tool</p>
+      <h1>Generate weather summary and advisory from forecast JSON</h1>
       <p class="hero-text">
-        Enter the 5-day weather forecast first. Then generate a clean side-by-side advisory table
-        for Chitradurga groundnut crop planning.
+        Select the crop, district, and stage. Paste the 5-day weather forecast in JSON format,
+        then generate a clean advisory.
       </p>
     </header>
 
-    <section class="panel compact-panel">
+    <section class="panel input-panel">
       <div class="field-row">
         <label>
           <span>Crop name</span>
-          <input id="cropInput" type="text" value="Groundnut">
+          <select id="cropSelect"></select>
         </label>
         <label>
           <span>District</span>
-          <input id="districtInput" type="text" value="Chitradurga">
+          <select id="districtSelect"></select>
         </label>
         <label>
           <span>Growth stage</span>
-          <input id="stageInput" type="text" value="Flowering to pegging">
+          <select id="stageSelect"></select>
         </label>
       </div>
 
       <label>
-        <span>Previous advisory</span>
-        <textarea id="prevAdvisoryInput" rows="10"></textarea>
+        <span>Weather forecast JSON</span>
+        <textarea id="forecastJsonInput" rows="14" spellcheck="false"></textarea>
       </label>
-    </section>
 
-    <section class="panel">
-      <div class="panel-heading">
-        <div>
-          <h2>Weather Forecast Table</h2>
-          <p class="subtext">Fill or edit the values below.</p>
-        </div>
+      <div class="helper-row">
+        <p class="subtext">
+          Use `days` with 5 forecast entries. Each day should include date, temperature, rainfall,
+          humidity, wind speed, wind direction, and cloud cover.
+        </p>
         <div class="action-row">
-          <button id="loadSampleBtn" class="ghost-button" type="button">Load sample</button>
+          <button id="loadSampleBtn" class="ghost-button" type="button">Load sample JSON</button>
           <button id="generateBtn" class="primary-button" type="button">Generate advisory</button>
         </div>
       </div>
 
-      <div class="table-wrap">
-        <table class="forecast-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Max C</th>
-              <th>Min C</th>
-              <th>Rain mm</th>
-              <th>RH AM %</th>
-              <th>RH PM %</th>
-              <th>Wind km/h</th>
-              <th>Direction</th>
-              <th>Cloud %</th>
-            </tr>
-          </thead>
-          <tbody id="forecastTableBody"></tbody>
-        </table>
-      </div>
+      <div id="messageBox" class="message-box" hidden></div>
     </section>
 
     <section class="panel">
       <div class="panel-heading">
         <div>
-          <h2 id="outputTitle">Advisory Table</h2>
-          <p class="subtext">Only the advisory output is shown below.</p>
+          <h2>Weather Summary</h2>
+          <p class="subtext">Forecast highlights from the JSON input.</p>
+        </div>
+      </div>
+      <div id="weatherSummaryGrid" class="summary-grid"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <h2 id="outputTitle">Advisory</h2>
+          <p class="subtext">Advisory only, based on selected district, crop, stage, and forecast.</p>
         </div>
       </div>
 
@@ -87,8 +78,7 @@
           <thead>
             <tr>
               <th>Domain</th>
-              <th>OLD ADVISORY</th>
-              <th>NEW ADVISORY (Updated Forecast - Chitradurga)</th>
+              <th>Advisory</th>
             </tr>
           </thead>
           <tbody id="advisoryTableBody"></tbody>
